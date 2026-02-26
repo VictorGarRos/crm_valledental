@@ -4,25 +4,22 @@ import prisma from '@/lib/prisma';
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
+    const dbUrl = process.env.DATABASE_URL || '';
+    const directUrl = process.env.DIRECT_URL || '';
+
+    const safePreview = (url: string) => {
+        if (!url) return 'missing';
+        const parts = url.split('@');
+        if (parts.length < 2) return 'invalid format';
+        const beforeAt = parts[0].split(':');
+        const protocol = beforeAt[0];
+        let user = beforeAt[beforeAt.length - 1];
+        if (user.startsWith('//')) user = user.substring(2);
+        const domain = parts[1].split('?')[0];
+        return `${protocol}//${user.substring(0, 10)}...[HIDDEN]...@${domain}`;
+    };
+
     try {
-        // 1. Check if ENV variables are present (values hidden for security)
-        const dbUrl = process.env.DATABASE_URL || '';
-        const directUrl = process.env.DIRECT_URL || '';
-
-        const safePreview = (url: string) => {
-            if (!url) return 'missing';
-            // Show protocol, first 5 chars of user, and domain (hiding password and rest of user)
-            const parts = url.split('@');
-            if (parts.length < 2) return 'invalid format';
-            const beforeAt = parts[0].split(':');
-            const protocol = beforeAt[0]; // e.g., postgresql:
-            let user = beforeAt[beforeAt.length - 1]; // Handles postgresql://...
-            if (user.startsWith('//')) user = user.substring(2);
-            const domain = parts[1].split('?')[0];
-            return `${protocol}//${user.substring(0, 10)}...[HIDDEN]...@${domain}`;
-        };
-
-        // 2. Try a simple query
         const start = Date.now();
         const result = await prisma.$queryRaw`SELECT 1 as connected`;
         const duration = Date.now() - start;
