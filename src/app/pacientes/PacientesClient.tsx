@@ -90,10 +90,9 @@ export default function PacientesClient({ initialPatients }: PacientesClientProp
                                             </Link>
                                             <button
                                                 onClick={() => handleDelete(patient.id, `${patient.name} ${patient.lastName}`)}
-                                                className={styles.actionBtn}
-                                                style={{ background: '#ff4757', border: 'none' }}
+                                                className={styles.deleteBtn}
                                             >
-                                                Borrar
+                                                <span>🗑️</span> Borrar
                                             </button>
                                         </div>
                                     </td>
