@@ -3,6 +3,7 @@ import Calendar from '../../components/Calendar/Calendar';
 import styles from '../page.module.css';
 import { getAppointments } from './actions';
 import { getPatients } from '../pacientes/actions';
+export const dynamic = 'force-dynamic';
 
 export default async function Calendario() {
     const [appointments, patients] = await Promise.all([

@@ -2,6 +2,7 @@ import React from "react";
 import { getPatient } from "../actions";
 import PatientProfileClient from "./PatientProfileClient";
 import { notFound } from "next/navigation";
+export const dynamic = "force-dynamic";
 
 interface PatientPageProps {
     params: Promise<{
