@@ -1,12 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { config } from "dotenv";
-import path from "path";
 
-// Explicitly load .env file as a safeguard for early module evaluation in Next.js/Turbopack
-if (typeof window === "undefined") {
-    config({ path: path.resolve(process.cwd(), ".env") });
-    console.log("[Prisma] Initializing client. DATABASE_URL from process.env:", !!process.env.DATABASE_URL);
-}
+// Prisma automatically uses DATABASE_URL from process.env in Next.js
 
 const prismaClientSingleton = () => {
     // Standard constructor. Prisma automatically uses DATABASE_URL from process.env
