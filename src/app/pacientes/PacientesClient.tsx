@@ -84,7 +84,7 @@ export default function PacientesClient({ initialPatients }: PacientesClientProp
                                             : "Sin citas"}
                                     </td>
                                     <td data-label="ACCIONES">
-                                        <div style={{ display: 'flex', gap: '8px' }}>
+                                        <div className={styles.actionGroup}>
                                             <Link href={`/pacientes/${patient.id}`} className={styles.actionBtn}>
                                                 Ver Ficha
                                             </Link>

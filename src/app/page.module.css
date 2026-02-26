@@ -228,12 +228,23 @@
 
 .actionBtn {
   color: var(--primary);
+  background: #f1fef7;
+  padding: 8px 16px;
+  border-radius: 10px;
   font-weight: 600;
+  font-size: 13px;
+  border: 1px solid #e1f5e9;
+  cursor: pointer;
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
 }
 
 .actionBtn:hover {
-  opacity: 0.7;
+  background: #e1f5e9;
+  opacity: 1;
 }
 
 .deleteBtn {
@@ -249,6 +260,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  justify-content: center;
 }
 
 .deleteBtn:hover {
@@ -257,6 +269,12 @@
   border-color: #ff4757;
   box-shadow: 0 4px 12px rgba(255, 71, 87, 0.2);
   transform: translateY(-1px);
+}
+
+.actionGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 @media (max-width: 1200px) {
