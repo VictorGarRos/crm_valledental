@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import styles from "../page.module.css";
 import AddPatientModal from "@/components/AddPatientModal";
-import { getPatients } from "./actions";
+import { getPatients, deletePatient } from "./actions";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 
@@ -22,6 +22,17 @@ export default function PacientesClient({ initialPatients }: PacientesClientProp
         const data = await getPatients();
         setPatients(data);
         setLoading(false);
+    };
+
+    const handleDelete = async (id: string, name: string) => {
+        if (confirm(`¿Estás seguro de que quieres borrar al paciente ${name}? Esta acción no se puede deshacer.`)) {
+            const result = await deletePatient(id);
+            if (result.success) {
+                refreshPatients();
+            } else {
+                alert(result.error);
+            }
+        }
     };
 
     return (
@@ -60,22 +71,31 @@ export default function PacientesClient({ initialPatients }: PacientesClientProp
                         ) : patients.length > 0 ? (
                             patients.map((patient) => (
                                 <tr key={patient.id}>
-                                    <td>
+                                    <td data-label="PACIENTE">
                                         <div style={{ fontWeight: 600, color: '#2c3e50' }}>
                                             {patient.name} {patient.lastName}
                                         </div>
                                         {patient.email && <div style={{ fontSize: '12px', color: '#95a5a6' }}>{patient.email}</div>}
                                     </td>
-                                    <td style={{ color: '#7f8c8d' }}>{patient.phone}</td>
-                                    <td style={{ color: '#7f8c8d' }}>
+                                    <td data-label="TELÉFONO" style={{ color: '#7f8c8d' }}>{patient.phone}</td>
+                                    <td data-label="ÚLTIMA CITA" style={{ color: '#7f8c8d' }}>
                                         {patient.appointments?.[0]
                                             ? format(new Date(patient.appointments[0].date), "d MMM, yyyy", { locale: es })
                                             : "Sin citas"}
                                     </td>
-                                    <td>
-                                        <Link href={`/pacientes/${patient.id}`} className={styles.actionBtn}>
-                                            Ver Ficha
-                                        </Link>
+                                    <td data-label="ACCIONES">
+                                        <div style={{ display: 'flex', gap: '8px' }}>
+                                            <Link href={`/pacientes/${patient.id}`} className={styles.actionBtn}>
+                                                Ver Ficha
+                                            </Link>
+                                            <button
+                                                onClick={() => handleDelete(patient.id, `${patient.name} ${patient.lastName}`)}
+                                                className={styles.actionBtn}
+                                                style={{ background: '#ff4757', border: 'none' }}
+                                            >
+                                                Borrar
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))

@@ -16,6 +16,7 @@ import {
 import { es } from 'date-fns/locale';
 import styles from './Calendar.module.css';
 import { createAppointment } from '@/app/calendario/actions';
+import CustomSelect from '../CustomSelect';
 
 interface Patient {
     id: string;
@@ -44,7 +45,7 @@ const Calendar = ({ initialAppointments, patients }: CalendarProps) => {
     const [showModal, setShowModal] = useState(false);
     const [newAppt, setNewAppt] = useState({
         patientId: '',
-        type: 'Consulta General',
+        type: 'Odontología',
         time: '09:00'
     });
 
@@ -154,7 +155,7 @@ const Calendar = ({ initialAppointments, patients }: CalendarProps) => {
 
         if (result.success) {
             setShowModal(false);
-            setNewAppt({ patientId: '', type: 'Consulta General', time: '09:00' });
+            setNewAppt({ patientId: '', type: 'Odontología', time: '09:00' });
         } else {
             alert("Error al crear la cita: " + result.error);
         }
@@ -172,18 +173,18 @@ const Calendar = ({ initialAppointments, patients }: CalendarProps) => {
                         <h3 className={styles.modalTitle}>Nueva Cita - {format(selectedDate, 'PPP', { locale: es })}</h3>
                         <form onSubmit={handleAddAppointment}>
                             <div className={styles.formField}>
-                                <label className={styles.label}>Paciente</label>
-                                <select
-                                    className={styles.select}
-                                    required
+                                <CustomSelect
+                                    label="Paciente"
+                                    options={patients.map(p => ({
+                                        value: p.id,
+                                        label: `${p.name} ${p.lastName}`,
+                                        icon: '👤'
+                                    }))}
                                     value={newAppt.patientId}
-                                    onChange={e => setNewAppt({ ...newAppt, patientId: e.target.value })}
-                                >
-                                    <option value="">Seleccionar paciente...</option>
-                                    {patients.map(p => (
-                                        <option key={p.id} value={p.id}>{p.name} {p.lastName}</option>
-                                    ))}
-                                </select>
+                                    onChange={val => setNewAppt({ ...newAppt, patientId: val })}
+                                    placeholder="Seleccionar paciente..."
+                                    searchable={true}
+                                />
                             </div>
                             <div className={styles.formField} style={{ display: 'flex', gap: '16px' }}>
                                 <div style={{ flex: 1 }}>
@@ -197,17 +198,17 @@ const Calendar = ({ initialAppointments, patients }: CalendarProps) => {
                                     />
                                 </div>
                                 <div style={{ flex: 2 }}>
-                                    <label className={styles.label}>Tipo de Cita</label>
-                                    <select
-                                        className={styles.select}
+                                    <CustomSelect
+                                        label="Tipo de Cita"
+                                        options={[
+                                            { value: 'Odontología', label: 'Odontología', icon: '🦷' },
+                                            { value: 'Ortodoncia', label: 'Ortodoncia', icon: '😬' },
+                                            { value: 'Implantología', label: 'Implantología', icon: '🔩' },
+                                            { value: 'Estética dental', label: 'Estética dental', icon: '✨' },
+                                        ]}
                                         value={newAppt.type}
-                                        onChange={e => setNewAppt({ ...newAppt, type: e.target.value })}
-                                    >
-                                        <option>Consulta General</option>
-                                        <option>Limpieza</option>
-                                        <option>Ortodoncia</option>
-                                        <option>Urgencia</option>
-                                    </select>
+                                        onChange={val => setNewAppt({ ...newAppt, type: val })}
+                                    />
                                 </div>
                             </div>
                             <div className={styles.btnRow}>

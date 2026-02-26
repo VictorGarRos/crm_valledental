@@ -4,7 +4,11 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './Header.module.css';
 
-const Header = () => {
+interface HeaderProps {
+    onMenuClick?: () => void;
+}
+
+const Header = ({ onMenuClick }: HeaderProps) => {
     const router = useRouter();
 
     const handleLogout = () => {
@@ -14,6 +18,9 @@ const Header = () => {
 
     return (
         <header className={styles.header}>
+            <button className={styles.menuBtn} onClick={onMenuClick}>
+                ☰
+            </button>
             <div className={styles.userInfo}>
                 <span className={styles.avatar}>👤</span>
                 <span className={styles.name}>Dra. Elena</span>

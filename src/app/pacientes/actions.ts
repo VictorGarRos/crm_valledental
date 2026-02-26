@@ -61,3 +61,22 @@ export async function getPatient(id: string) {
         return null;
     }
 }
+
+export async function deletePatient(id: string) {
+    try {
+        // Delete appointments first (manual cascade if not set in DB)
+        await prisma.appointment.deleteMany({
+            where: { patientId: id }
+        });
+
+        await prisma.patient.delete({
+            where: { id },
+        });
+
+        revalidatePath("/pacientes");
+        return { success: true };
+    } catch (error) {
+        console.error("Error deleting patient:", error);
+        return { success: false, error: "Error al borrar el paciente" };
+    }
+}

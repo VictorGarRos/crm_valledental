@@ -102,15 +102,15 @@ export default function DashboardClient({ stats, recentAppointments }: Dashboard
                         {recentAppointments.length > 0 ? (
                             recentAppointments.map((app) => (
                                 <tr key={app.id}>
-                                    <td>{app.patient.name} {app.patient.lastName}</td>
-                                    <td>{app.type}</td>
-                                    <td>{new Date(app.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
-                                    <td>
+                                    <td data-label="PACIENTE">{app.patient.name} {app.patient.lastName}</td>
+                                    <td data-label="TIPO">{app.type}</td>
+                                    <td data-label="FECHA">{new Date(app.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+                                    <td data-label="ESTADO">
                                         <span className={app.status === 'Completed' ? styles.statusCompleted : styles.statusScheduled}>
                                             {app.status === 'Completed' ? 'Completada' : 'Programada'}
                                         </span>
                                     </td>
-                                    <td>
+                                    <td data-label="ACCIÓN">
                                         <Link href={`/pacientes/${app.patientId}`} className={styles.actionBtn}>
                                             Ver
                                         </Link>
