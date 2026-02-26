@@ -44,6 +44,11 @@ export async function GET() {
             message: error.message,
             code: error.code,
             meta: error.meta,
+            config: {
+                dbUrlPreview: safePreview(dbUrl),
+                directUrlPreview: safePreview(directUrl),
+                nodeEnv: process.env.NODE_ENV
+            },
             stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
         }, { status: 500 });
     }
