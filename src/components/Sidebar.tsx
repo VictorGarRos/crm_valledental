@@ -1,21 +1,39 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import styles from './Sidebar.module.css';
 
 const Sidebar = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const [userName, setUserName] = useState('Usuario');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const storedName = localStorage.getItem('username');
     if (storedName) {
       setUserName(storedName.charAt(0).toUpperCase() + storedName.slice(1));
     }
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  const handleLogout = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent toggling the dropdown when clicking logout
+    localStorage.removeItem('username');
+    router.push('/login');
+  };
 
   const menuItems = [
     { name: 'Panel', icon: '📊', path: '/' },
@@ -90,12 +108,26 @@ const Sidebar = () => {
         </div>
       </nav>
 
-      <div className={styles.userProfile}>
-        <div className={styles.avatar}>👤</div>
-        <div className={styles.userInfo}>
-          <p className={styles.userName}>{userName}</p>
-          <p className={styles.userRole}>Usuario</p>
-        </div>
+      <div style={{ position: 'relative' }} ref={dropdownRef}>
+        <button
+          className={styles.userProfile}
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+        >
+          <div className={styles.avatar}>👤</div>
+          <div className={styles.userInfo}>
+            <p className={styles.userName}>{userName}</p>
+            <p className={styles.userRole}>Usuario</p>
+          </div>
+        </button>
+
+        {isDropdownOpen && (
+          <div className={styles.dropdown}>
+            <button className={styles.logoutBtn} onClick={handleLogout}>
+              <span className={styles.icon}>←</span>
+              Salir
+            </button>
+          </div>
+        )}
       </div>
     </aside>
   );

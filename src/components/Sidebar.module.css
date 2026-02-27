@@ -73,8 +73,22 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding-top: 24px;
+    padding: 12px;
+    margin-top: 24px;
     border-top: 1px solid rgba(0, 0, 0, 0.05);
+    background: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: background 0.2s;
+    position: relative;
+}
+
+.userProfile:hover {
+    background: #f1f2f6;
 }
 
 .avatar {
@@ -88,12 +102,54 @@
     font-size: 20px;
 }
 
+.userInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
 .userName {
     font-size: 14px;
     font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
 }
 
 .userRole {
     font-size: 12px;
     color: #95a5a6;
+    margin: 0;
+}
+
+.dropdown {
+    position: absolute;
+    bottom: calc(100% + 5px);
+    left: 0;
+    width: 100%;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    padding: 8px;
+    z-index: 1000;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.logoutBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff1f0;
+    color: #ff4d4f;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+}
+
+.logoutBtn:hover {
+    background: #ffccc7;
 }
