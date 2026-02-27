@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
@@ -8,14 +8,6 @@ import styles from './Sidebar.module.css';
 
 const Sidebar = () => {
   const pathname = usePathname();
-  const [userName, setUserName] = useState('Usuario');
-
-  useEffect(() => {
-    const storedName = localStorage.getItem('username');
-    if (storedName) {
-      setUserName(storedName.charAt(0).toUpperCase() + storedName.slice(1));
-    }
-  }, []);
 
   const menuItems = [
     { name: 'Panel', icon: '📊', path: '/' },
@@ -90,13 +82,6 @@ const Sidebar = () => {
         </div>
       </nav>
 
-      <div className={styles.userProfile}>
-        <div className={styles.avatar}>👤</div>
-        <div className={styles.userInfo}>
-          <p className={styles.userName}>{userName}</p>
-          <p className={styles.userRole}>Usuario</p>
-        </div>
-      </div>
     </aside>
   );
 };
