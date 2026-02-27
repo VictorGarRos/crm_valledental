@@ -4,12 +4,9 @@ const prismaClientSingleton = () => {
     const databaseUrl = process.env.DATABASE_URL;
 
     // Standard constructor. Explicitly pass the URL to ensure it's loaded in all environments.
-    // connection_limit=1 is recommended for serverless to prevent pool exhaustion.
     return new PrismaClient({
         datasources: databaseUrl ? {
-            db: {
-                url: databaseUrl.includes("connection_limit") ? databaseUrl : `${databaseUrl}${databaseUrl.includes("?") ? "&" : "?"}connection_limit=1`
-            }
+            db: { url: databaseUrl }
         } : undefined,
         log: process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
     });
