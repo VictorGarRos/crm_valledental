@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "./page.module.css";
 import AnalyticsChart from "@/components/AnalyticsChart";
@@ -10,6 +11,15 @@ interface DashboardClientProps {
 }
 
 export default function DashboardClient({ stats, recentAppointments }: DashboardClientProps) {
+    const [userName, setUserName] = useState('Marian');
+
+    useEffect(() => {
+        const storedName = localStorage.getItem('username');
+        if (storedName) {
+            setUserName(storedName.charAt(0).toUpperCase() + storedName.slice(1));
+        }
+    }, []);
+
     const sendWhatsApp = (phone: string, name: string) => {
         const message = `Hola ${name}, te recordamos tu cita en Clínica Valledental. ¡Te esperamos!`;
         const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
@@ -22,7 +32,7 @@ export default function DashboardClient({ stats, recentAppointments }: Dashboard
         <div className={styles.container}>
             <header className={styles.header}>
                 <div>
-                    <h1>Bienvenida de nuevo, Marian</h1>
+                    <h1>Bienvenida de nuevo, {userName}</h1>
                     <p>Este es el resumen de las próximas citas programadas.</p>
                 </div>
                 <div className={styles.searchBar}>

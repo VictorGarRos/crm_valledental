@@ -21,10 +21,6 @@ const Header = ({ onMenuClick }: HeaderProps) => {
             <button className={styles.menuBtn} onClick={onMenuClick}>
                 ☰
             </button>
-            <div className={styles.userInfo}>
-                <span className={styles.avatar}>👤</span>
-                <span className={styles.name}>Dra. Elena</span>
-            </div>
             <button className={styles.logoutBtn} onClick={handleLogout}>
                 <span className={styles.icon}>🚪</span>
                 Salir

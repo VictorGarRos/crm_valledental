@@ -62,6 +62,22 @@ export async function getPatient(id: string) {
     }
 }
 
+export async function updatePatientImage(id: string, imageUrl: string) {
+    try {
+        await prisma.patient.update({
+            where: { id },
+            data: { imageUrl },
+        });
+
+        revalidatePath(`/pacientes/${id}`);
+        revalidatePath("/pacientes");
+        return { success: true };
+    } catch (error) {
+        console.error("Error updating patient image:", error);
+        return { success: false, error: "Error al actualizar la imagen" };
+    }
+}
+
 export async function deletePatient(id: string) {
     try {
         // Delete appointments first (manual cascade if not set in DB)

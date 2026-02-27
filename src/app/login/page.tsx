@@ -7,8 +7,11 @@ import styles from './Login.module.css';
 export default function Login() {
     const router = useRouter();
 
+    const [username, setUsername] = React.useState('');
+
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
+        localStorage.setItem('username', username);
         router.push('/');
     };
 
@@ -24,10 +27,12 @@ export default function Login() {
                     <div className={styles.inputWrapper}>
                         <span className={styles.inputIcon}>👤</span>
                         <input
-                            type="email"
+                            type="text"
                             placeholder="Usuario"
                             required
                             className={styles.input}
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
                         />
                     </div>
 

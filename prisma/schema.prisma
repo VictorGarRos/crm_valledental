@@ -15,6 +15,7 @@ model Patient {
   email         String?
   phone         String
   birthDate     DateTime?
+  imageUrl      String?
   appointments  Appointment[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt

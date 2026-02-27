@@ -1,16 +1,62 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useState } from "react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import styles from "../../page.module.css";
+import { updatePatientImage } from "../actions";
 
 interface PatientProfileClientProps {
     patient: any;
 }
 
 export default function PatientProfileClient({ patient }: PatientProfileClientProps) {
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [imageUrl, setImageUrl] = useState(patient.imageUrl);
+    const [isUploading, setIsUploading] = useState(false);
+
+    const handleImageClick = () => {
+        if (!isUploading) {
+            fileInputRef.current?.click();
+        }
+    };
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Ensure smaller file sizes (basic check)
+        if (file.size > 2 * 1024 * 1024) {
+            alert('La imagen no debe superar los 2MB.');
+            return;
+        }
+
+        setIsUploading(true);
+        try {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = async () => {
+                const base64String = reader.result as string;
+
+                const result = await updatePatientImage(patient.id, base64String);
+                if (result.success) {
+                    setImageUrl(base64String);
+                } else {
+                    alert('Error al subir la imagen: ' + result.error);
+                }
+                setIsUploading(false);
+            };
+            reader.onerror = () => {
+                alert('Error al procesar la imagen.');
+                setIsUploading(false);
+            };
+        } catch (error) {
+            alert('Error inesperado al subir la imagen.');
+            setIsUploading(false);
+        }
+    };
+
     return (
         <div className={styles.container}>
             <header className={styles.header}>
@@ -21,7 +67,51 @@ export default function PatientProfileClient({ patient }: PatientProfileClientPr
                         </Link>
                         <h1>Ficha del Paciente</h1>
                     </div>
-                    <p>Historial clínico y detalles de contacto de <strong>{patient.name} {patient.lastName}</strong></p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginTop: '16px' }}>
+                        <div
+                            onClick={handleImageClick}
+                            style={{
+                                width: '80px',
+                                height: '80px',
+                                borderRadius: '50%',
+                                backgroundColor: '#f0f2f5',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: isUploading ? 'not-allowed' : 'pointer',
+                                overflow: 'hidden',
+                                border: '2px solid #e0e0e0',
+                                position: 'relative'
+                            }}
+                            title="Haz clic para cambiar la foto"
+                        >
+                            {imageUrl ? (
+                                <img src={imageUrl} alt="Perfil" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            ) : (
+                                <span style={{ fontSize: '36px' }}>👤</span>
+                            )}
+                            {isUploading && (
+                                <div style={{
+                                    position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                                    backgroundColor: 'rgba(255,255,255,0.7)',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                }}>
+                                    <span style={{ fontSize: '12px', fontWeight: 'bold' }}>...</span>
+                                </div>
+                            )}
+                        </div>
+                        <input
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp"
+                            ref={fileInputRef}
+                            style={{ display: 'none' }}
+                            onChange={handleFileChange}
+                        />
+                        <div>
+                            <p style={{ margin: 0, fontSize: '18px', fontWeight: 'bold' }}>{patient.name} {patient.lastName}</p>
+                            <p style={{ margin: 0, color: '#7f8c8d' }}>Historial clínico y detalles de contacto</p>
+                        </div>
+                    </div>
                 </div>
             </header>
 
