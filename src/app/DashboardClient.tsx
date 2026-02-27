@@ -58,7 +58,7 @@ export default function DashboardClient({ stats, recentAppointments }: Dashboard
                     <div className={styles.heroCard}>
                         <div className={styles.heroHeader}>
                             <span className={styles.badge}>PRÓXIMA CITA</span>
-                            <span className={styles.videoTag}>📹 {nextAppointment.type}</span>
+                            <span className={styles.videoTag}>{nextAppointment.type}</span>
                         </div>
                         <div className={styles.heroContent}>
                             <div className={styles.doctorInfo}>
